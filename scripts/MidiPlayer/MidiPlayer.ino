@@ -12,12 +12,17 @@ int noteDuration = 100;   // Note dauration for the test
 int pos_piezo[] = {9, 8, 7, 6, 5, 4, 1, 0};       // Digital pin location for the piezos starting from left to right V1.3 +
 
 class Note {
+  public:
     int frequency;
     int duration;
+    Note(int frequency, int duration) {
+      this->frequency = frequency;
+      this->duration = duration;
+    }
 };
 
 Note song[] = {
-
+  Note(440,1000)
 };
 
 void setup() {
@@ -29,9 +34,9 @@ void setup() {
 }
 
 void loop() {
-    for(int i = 0; i <= 7; i++) {
-        tone(pos_piezo[i], frequency, duration);
-        delay(duration);
+    for(int i = 0; i < 1; i++) {
+        tone(pos_piezo[i], song[i].frequency, song[i].duration);
+        delay(song[i].duration);
         noTone(pos_piezo[i]);
     }
 }
