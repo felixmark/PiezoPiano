@@ -67,25 +67,19 @@ class Song():
             ret_str += "Notes buzzer " + str(buzzer_id) + ": " + str(len(self.final_8_buzzer_song[buzzer_id])) + "\n"
 
         ret_str += ("=" * 80) + "\n"
-        ret_str += "unsigned long song[8][][] = {   // 8 Buzzers playing N notes consisting of 3 parameters: time played in us, frequency in Hz and time stopped in us\n"
-        first_buzzer = True
         for buzzer_id, buzzer in enumerate(self.final_8_buzzer_song):
+            ret_str += "unsigned long buzzer_" + str(buzzer_id) + "[][3] = {   // Buzzer playing N notes consisting of 3 parameters: time played in us, frequency in Hz and time stopped in us"
             first_note = True
-            if not first_buzzer:
-                ret_str += ",\n"
-            first_buzzer = False
-            ret_str += "    {"
             for note_id, note in enumerate(self.final_8_buzzer_song[buzzer_id]):
                 if not first_note:
                     ret_str += ","
                     if note_id % 5 == 0:
-                        ret_str += "\n" + "        "
+                        ret_str += "\n" + "    "
                 else:
-                    ret_str += "\n" + "        "
+                    ret_str += "\n" + "    "
                 first_note = False
                 ret_str += str(self.final_8_buzzer_song[buzzer_id][note_id])
-            ret_str += "\n    }"
-        ret_str += "\n}"
+            ret_str += "\n};\n"
         
         return ret_str
 
