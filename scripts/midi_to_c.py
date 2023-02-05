@@ -27,6 +27,7 @@ class Song():
         self.song_path = song_path
         self.length_in_s = length_in_s
         self.ticks_per_beat = ticks_per_beat
+        self.last_note_end = 0
 
     def append_note(self, note_to_append:Note) -> None:
         success = False
@@ -47,6 +48,8 @@ class Song():
             for note in buzzer:
                 if frequency == note.frequency and note.time_stopped == 0:
                     note.time_stopped = round(time_stopped)
+                    if time_stopped > self.last_note_end:
+                        self.last_note_end = round(time_stopped)
                     success = True
                     break
             if success:
@@ -67,6 +70,8 @@ class Song():
             ret_str += "Notes buzzer " + str(buzzer_id) + ": " + str(len(self.final_8_buzzer_song[buzzer_id])) + "\n"
 
         ret_str += ("=" * 80) + "\n"
+
+        ret_str += "unsigned long song_length_in_us = " + str(self.last_note_end) + ";" + "\n"
         for buzzer_id, buzzer in enumerate(self.final_8_buzzer_song):
             ret_str += "unsigned long buzzer_" + str(buzzer_id) + "[][3] = {   // Buzzer playing N notes consisting of 3 parameters: time played in us, frequency in Hz and time stopped in us"
             first_note = True
@@ -80,6 +85,8 @@ class Song():
                 first_note = False
                 ret_str += str(self.final_8_buzzer_song[buzzer_id][note_id])
             ret_str += "\n};\n"
+        
+        ret_str += "unsigned long *song[8] = {\n" + "    *buzzer_0, *buzzer_1, *buzzer_2, *buzzer_3, *buzzer_4, *buzzer_5, *buzzer_6, *buzzer_7\n" + "};"
         
         return ret_str
 
